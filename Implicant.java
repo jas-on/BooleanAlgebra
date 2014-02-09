@@ -42,14 +42,17 @@ public class Implicant {
 	 */
 	public boolean isConsensus(Implicant imp1, Implicant imp2)
 	{
-      tempImp1MSB = imp1.getMSB() & this.getMSB();
-      tempImp1LSB = imp1.getLSB() & this.getLSB();
-      tempImp2MSB = imp2.getMSB() & this.getMSB();
-      tempImp2LSB = imp2.getLSB() & this.getLSB();
+      long tempImp1MSB = imp1.getMSB() & this.getMSB();
+      long tempImp1LSB = imp1.getLSB() & this.getLSB();
+      long tempImp2MSB = imp2.getMSB() & this.getMSB();
+      long tempImp2LSB = imp2.getLSB() & this.getLSB();
       if((tempImp1MSB+tempImp1LSB) != 0 && (tempImp2MSB+tempImp2LSB) !=0) {
-         if() {
+         if(!differBySingleVariable(imp1, imp2)) {
+            return false;
          }
       }
+      return (tempImp1MSB | tempImp2MSB) == this.myMSB && 
+             (tempImp1LSB | tempImp2LSB) == this.myLSB;
 	}
 
 	/*
@@ -68,5 +71,14 @@ public class Implicant {
 				(imp.getNumVars() == myNumVars) &&
 				(imp.getMSB() == myMSB);
 	}
+
+   public boolean differBySingleVariable(Implicant imp1, Implicant imp2) {
+     long newMSB = imp1.getMSB() ^ imp2.getMSB();
+     long newLSB = imp1.getLSB() ^ imp2.getLSB();
+     int bitCountNewMSB = Long.bitCount(newMSB);     
+     int bitCountNewLSB = Long.bitCount(newLSB);     
+     return (bitCountNewMSB == 1) && (bitCountNewLSB == 1)
+            && (newMSB == newLSB);
+   }
 	
 }
