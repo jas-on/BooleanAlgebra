@@ -46,10 +46,9 @@ public class Implicant {
       long tempImp1LSB = imp1.getLSB() & this.getLSB();
       long tempImp2MSB = imp2.getMSB() & this.getMSB();
       long tempImp2LSB = imp2.getLSB() & this.getLSB();
-      if((tempImp1MSB+tempImp1LSB) != 0 && (tempImp2MSB+tempImp2LSB) !=0) {
-         if(!differBySingleVariable(imp1, imp2)) {
+      if ((tempImp1MSB+tempImp1LSB) != 0 && (tempImp2MSB+tempImp2LSB) != 0) {
+         if (!differBySingleVariable(imp1, imp2))
             return false;
-         }
       }
       return (tempImp1MSB | tempImp2MSB) == this.myMSB && 
              (tempImp1LSB | tempImp2LSB) == this.myLSB;

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 
 /**
@@ -119,8 +120,43 @@ public class BooleanExpression {
 	 */
 	public boolean doSimplification()
 	{
-		//TODO: Your code goes here
-		return false;
+      Iterator<Implicant> iter = implicantList.iterator();      
+      while (iter.hasNext()) {
+         Implicant imp = iter.next();
+         Iterator<Implicant> iter2 = implicantList.iterator();      
+         while (iter2.hasNext()) {
+            Implicant imp2 = iter2.next();
+            if (imp2.equals(imp))
+               continue;
+            if (imp.isSubset(imp2)) {
+               iter.remove();
+               break;
+            }
+         }
+      }
+
+      iter = implicantList.iterator();      
+      while (iter.hasNext()) { 
+         Implicant imp = iter.next();
+         Iterator<Implicant> iter2 = implicantList.iterator();
+         while (iter2.hasNext()) {
+            Implicant imp2 = iter2.next();
+            if (imp2.equals(imp))
+               continue;
+            Iterator<Implicant> iter3 = implicantList.iterator();
+            while (iter3.hasNext()) {
+               Implicant imp3 = iter.next();
+               if (imp3.equals(imp2) || imp3.equals(imp))
+                  continue;
+               if(imp.isConsensus(imp2, imp3)) {
+                  iter.remove();
+                  break;
+               }
+            }
+         }
+      }
+
+      return true;
 	}
 	
 	/*
