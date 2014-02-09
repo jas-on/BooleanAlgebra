@@ -89,6 +89,6 @@ public class Implicant {
   }
 
   public static boolean hasZeroVariable(long msb, long lsb) {
-    return ((msb | lsb) == -1);
+    return ((msb | lsb) != -1);
   }
 }
