@@ -194,7 +194,7 @@ public class BooleanExpression {
     if (numVars == 0)
       return "";
 
-    for (int i = numVars; i > -1; --i) {
+    for (int i = numVars; i > 0; --i) {
       if (msb[sizeOfLong - i] == '1' && lsb[sizeOfLong - i] == '1') {
         continue;
       } else if (msb[sizeOfLong - i] == '1') {
