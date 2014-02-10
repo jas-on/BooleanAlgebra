@@ -218,7 +218,7 @@ public class BooleanExpression {
 
         outputStream.println("and a" + andCounter + "(a" +
                             andCounter++ + "_o, 1, " +
-                            andList.toString());
+                            andList);
       }
 
       StringBuffer orList = new StringBuffer();
