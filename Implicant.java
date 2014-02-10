@@ -55,11 +55,10 @@ public class Implicant {
     }
 
     if ((tempImp1MSB | tempImp1LSB) != 0 && (tempImp2MSB | tempImp2LSB) != 0) {
-      if (differBySingleVariable(imp1, imp2))
+      if (!differBySingleVariable(imp1, imp2))
         return false;
     }
-    return (tempImp1MSB | tempImp2MSB) == this.myMSB &&
-           (tempImp1LSB | tempImp2LSB) == this.myLSB;
+    return (tempImp1MSB | tempImp2MSB) == this.myMSB && (tempImp1LSB | tempImp2LSB) == this.myLSB;
   }
 
   /*
