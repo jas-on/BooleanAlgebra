@@ -96,19 +96,6 @@ class Test {
     Implicant b2 = theList.get(1);
     Implicant cde2 = theList.get(2);
 
-    System.out.println(boEx.booleanExpressionToString(a2));
-    System.out.println(a2.getMSB());
-    System.out.println(a2.getLSB());
-    System.out.println();
-    System.out.println(boEx.booleanExpressionToString(b2));
-    System.out.println(b2.getMSB());
-    System.out.println(b2.getLSB());
-    System.out.println();
-    System.out.println(boEx.booleanExpressionToString(cde2));
-    System.out.println(cde2.getMSB());
-    System.out.println(cde2.getLSB());
-    System.out.println();
-
     assert !(Implicant.hasZeroVariable(a2.getMSB() & b2.getMSB(), a2.getLSB() &b2.getLSB()));
     assert !(Implicant.hasZeroVariable(a2.getMSB() & cde2.getMSB(), a2.getLSB() &cde2.getLSB()));
     assert !(Implicant.hasZeroVariable(cde2.getMSB() & b2.getMSB(), cde2.getLSB() &b2.getLSB()));
