@@ -172,9 +172,9 @@ public class BooleanExpression {
       outputStream.println("output out");
       outputStream.println(");");
 
-       for (Implicant imp : implicantList) {
-          outputStream.println(booleanExpressionToString(imp));
-       }
+      for (Implicant imp : implicantList) {
+        outputStream.println(booleanExpressionToString(imp));
+      }
 
       outputStream.println("endmodule");
       outputStream.close();
@@ -182,22 +182,25 @@ public class BooleanExpression {
     } catch (Exception e){
       return false;
     }
-
   }
 
   public String booleanExpressionToString(Implicant imp) {
     char[] msb = Long.toBinaryString(imp.getMSB()).toCharArray();
     char[] lsb = Long.toBinaryString(imp.getLSB()).toCharArray();
+    int numVars = imp.getNumVars();
     int sizeOfLong = msb.length;
     StringBuffer out = new StringBuffer();
 
-    for (int i = sizeOfLong - 1; i > -1; --i) {
-      if (msb[i] == '1' && lsb[i] == '1') {
+    if (numVars == 0)
+      return "";
+
+    for (int i = numVars; i > -1; --i) {
+      if (msb[sizeOfLong - i] == '1' && lsb[sizeOfLong - i] == '1') {
         continue;
-      } else if (msb[i] == '1') {
-        out.append(alphabet.charAt(sizeOfLong - i - 1) + "'");
-      } else if (lsb[i] == '1') {
-        out.append(alphabet.charAt(sizeOfLong - i - 1));
+      } else if (msb[sizeOfLong - i] == '1') {
+        out.append(alphabet.charAt(numVars - i) + "'");
+      } else if (lsb[sizeOfLong - i] == '1') {
+        out.append(alphabet.charAt(numVars - i));
       }
     }
 
