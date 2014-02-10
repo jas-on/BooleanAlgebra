@@ -134,19 +134,24 @@ public class BooleanExpression {
     }
 
     iter = implicantList.iterator();
+    boolean broken = true;
     while (iter.hasNext()) {
       Implicant imp = iter.next();
+      broken = false;
       for (Implicant imp2 : implicantList) {
         if (imp2 == imp)
           continue;
         for (Implicant imp3 : implicantList) {
           if (imp3 == imp2 || imp3 == imp)
             continue;
-          if(imp.isConsensus(imp2, imp3)) {
+          if (imp.isConsensus(imp2, imp3)) {
             iter.remove();
+            broken = true;
             break;
           }
         }
+        if (broken)
+          break;
       }
     }
 
