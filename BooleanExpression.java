@@ -146,6 +146,10 @@ public class BooleanExpression {
             continue;
           if (imp.isConsensus(imp2, imp3)) {
             iter.remove();
+            System.out.println(booleanExpressionToString(imp));
+            System.out.println(booleanExpressionToString(imp2));
+            System.out.println(booleanExpressionToString(imp3));
+            System.out.println();
             broken = true;
             break;
           }

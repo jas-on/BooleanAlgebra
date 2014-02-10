@@ -44,19 +44,25 @@ public class Implicant {
   {
     long tempImp1MSB = imp1.getMSB() & this.getMSB();
     long tempImp1LSB = imp1.getLSB() & this.getLSB();
+    boolean zero = false;
+
     if (Implicant.hasZeroVariable(tempImp1MSB, tempImp1LSB)) {
       tempImp1MSB = tempImp1LSB = 0;
+      zero = true;
     }
 
     long tempImp2MSB = imp2.getMSB() & this.getMSB();
     long tempImp2LSB = imp2.getLSB() & this.getLSB();
     if (Implicant.hasZeroVariable(tempImp2MSB, tempImp2LSB)) {
       tempImp2MSB = tempImp2LSB = 0;
+      zero = true;
     }
 
-    if ((tempImp1MSB | tempImp1LSB) != 0 && (tempImp2MSB | tempImp2LSB) != 0) {
-      if (differBySingleVariable(imp1, imp2))
-        return false;
+    Implicant tempImp1 = new Implicant(tempImp1MSB, tempImp1LSB, 0);
+    Implicant tempImp2 = new Implicant(tempImp2MSB, tempImp2LSB, 0);
+
+    if (!zero && !differBySingleVariable(tempImp1, tempImp2)) {
+      return false;
     }
     return (tempImp1MSB | tempImp2MSB) == this.myMSB &&
            (tempImp1LSB | tempImp2LSB) == this.myLSB;
@@ -79,7 +85,8 @@ public class Implicant {
            (imp.getMSB() == myMSB);
   }
 
-  public boolean differBySingleVariable(Implicant imp1, Implicant imp2) {
+  public static boolean differBySingleVariable(Implicant imp1,
+                                               Implicant imp2) {
     long newMSB = imp1.getMSB() ^ imp2.getMSB();
     long newLSB = imp1.getLSB() ^ imp2.getLSB();
     int bitCountNewMSB = Long.bitCount(newMSB);

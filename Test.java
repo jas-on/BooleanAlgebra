@@ -1,3 +1,5 @@
+import java.util.List;
+
 class Test {
   public static void main(String[] args) {
     testDiffer();
@@ -30,15 +32,15 @@ class Test {
     Implicant Abc = (new BooleanExpression("a'bc")).getImplicantList().get(0);
     Implicant ABc = (new BooleanExpression("a'b'c")).getImplicantList().get(0);
     Implicant ABC = (new BooleanExpression("a'b'c'")).getImplicantList().get(0);
-    assert (abc.differBySingleVariable(abc, Abc));
-    assert (abc.differBySingleVariable(Abc, ABc));
-    assert (abc.differBySingleVariable(ABc, Abc));
-    assert (abc.differBySingleVariable(ABc, ABC));
-    assert (!abc.differBySingleVariable(abc, ABc));
-    assert (!abc.differBySingleVariable(ABC, Abc));
-    assert (!abc.differBySingleVariable(abc, ABC));
-    assert (!abc.differBySingleVariable(Abc, ABC));
-    assert (!abc.differBySingleVariable(bc, ac));
+    assert (Implicant.differBySingleVariable(abc, Abc));
+    assert (Implicant.differBySingleVariable(Abc, ABc));
+    assert (Implicant.differBySingleVariable(ABc, Abc));
+    assert (Implicant.differBySingleVariable(ABc, ABC));
+    assert (!Implicant.differBySingleVariable(abc, ABc));
+    assert (!Implicant.differBySingleVariable(ABC, Abc));
+    assert (!Implicant.differBySingleVariable(abc, ABC));
+    assert (!Implicant.differBySingleVariable(Abc, ABC));
+    assert (!Implicant.differBySingleVariable(bc, ac));
   }
 
   private static void testSubset() {
@@ -68,6 +70,8 @@ class Test {
 
   private static void testConsensus() {
     Implicant ac = (new BooleanExpression("abc+ac")).getImplicantList().get(1);
+    Implicant a = (new BooleanExpression("abc+a")).getImplicantList().get(1);
+    Implicant b = (new BooleanExpression("abc+b")).getImplicantList().get(1);
     Implicant Ac = (new BooleanExpression("abc+a'c")).getImplicantList().get(1);
     Implicant ab = (new BooleanExpression("abc+ab")).getImplicantList().get(1);
     Implicant bc = (new BooleanExpression("abc+bc")).getImplicantList().get(1);
@@ -76,13 +80,39 @@ class Test {
     Implicant Abc = (new BooleanExpression("a'bc")).getImplicantList().get(0);
     Implicant ABc = (new BooleanExpression("a'b'c")).getImplicantList().get(0);
     Implicant ABC = (new BooleanExpression("a'b'c'")).getImplicantList().get(0);
-    assert (abc.isConsensus(ac, ab));
+    Implicant cde = (new BooleanExpression("abc+cde")).getImplicantList().get(1);
     assert (bc.isConsensus(ab, Ac));
-    assert (abc.isConsensus(abc, abc));
     assert (abc.isConsensus(abc, ABC));
     assert (abc.isConsensus(ab, Ac));
     assert !(bc.isConsensus(ab, ab));
     assert !(ABC.isConsensus(Abc, abc));
     assert !(bc.isConsensus(ac, abc));
+    assert !(a.isConsensus(b, cde));
+
+    String booleanExpression = "a + b + cde + fgh + a'b'c + df'g + abd' + bgh' + ab    cde + abi + ace + e'f'g'";
+    BooleanExpression boEx = new BooleanExpression(booleanExpression);
+    List<Implicant> theList = boEx.getImplicantList();
+    Implicant a2 = theList.get(0);
+    Implicant b2 = theList.get(1);
+    Implicant cde2 = theList.get(2);
+
+    System.out.println(boEx.booleanExpressionToString(a2));
+    System.out.println(a2.getMSB());
+    System.out.println(a2.getLSB());
+    System.out.println();
+    System.out.println(boEx.booleanExpressionToString(b2));
+    System.out.println(b2.getMSB());
+    System.out.println(b2.getLSB());
+    System.out.println();
+    System.out.println(boEx.booleanExpressionToString(cde2));
+    System.out.println(cde2.getMSB());
+    System.out.println(cde2.getLSB());
+    System.out.println();
+
+    assert !(Implicant.hasZeroVariable(a2.getMSB() & b2.getMSB(), a2.getLSB() &b2.getLSB()));
+    assert !(Implicant.hasZeroVariable(a2.getMSB() & cde2.getMSB(), a2.getLSB() &cde2.getLSB()));
+    assert !(Implicant.hasZeroVariable(cde2.getMSB() & b2.getMSB(), cde2.getLSB() &b2.getLSB()));
+
+    assert !(a2.isConsensus(b2, cde2));
   }
 }
