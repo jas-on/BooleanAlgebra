@@ -51,6 +51,27 @@ public class BooleanExpression {
 
     initBooleanExpression(newNumVars);
 
+<<<<<<< HEAD
+      iter = implicantList.iterator();      
+      while (iter.hasNext()) { 
+         Implicant imp = iter.next();
+         Iterator<Implicant> iter2 = implicantList.iterator();
+         while (iter2.hasNext()) {
+            Implicant imp2 = iter2.next();
+            if (imp2.equals(imp))
+               continue;
+            Iterator<Implicant> iter3 = implicantList.iterator();
+            while (iter3.hasNext()) {
+               Implicant imp3 = iter3.next();
+               if (imp3.equals(imp2) || imp3.equals(imp))
+                  continue;
+               if(imp.isConsensus(imp2, imp3)) {
+                  iter.remove();
+                  break;
+               }
+            }
+         }
+=======
     //Iterate through all of the implicant strings
     for (String impString : impStrings)
     {
@@ -87,6 +108,7 @@ public class BooleanExpression {
             MSB &= ~(1 << index);
           }
         }
+>>>>>>> 134ec7ac817daa103f9c292426d445ce9cc6e361
       }
 
       Implicant newImp = new Implicant(MSB,LSB,newNumVars);
@@ -134,24 +156,19 @@ public class BooleanExpression {
     }
 
     iter = implicantList.iterator();
-    boolean broken = true;
     while (iter.hasNext()) {
       Implicant imp = iter.next();
-      broken = false;
       for (Implicant imp2 : implicantList) {
         if (imp2 == imp)
           continue;
         for (Implicant imp3 : implicantList) {
           if (imp3 == imp2 || imp3 == imp)
             continue;
-          if (imp.isConsensus(imp2, imp3)) {
+          if(imp.isConsensus(imp2, imp3)) {
             iter.remove();
-            broken = true;
             break;
           }
         }
-        if (broken)
-          break;
       }
     }
 
@@ -170,97 +187,77 @@ public class BooleanExpression {
     try {
       PrintWriter outputStream = new PrintWriter(new FileWriter(fileName + ".v"));
       outputStream.println("module " + fileName + "(");
-
-      for (int i = 0; i < myNumVars; i++) {
+      for (int i = 0; i < myNumVars; i++)
+      {
         outputStream.println("input " + alphabet.charAt(i) + ",");
       }
-
       outputStream.println("output out");
       outputStream.println(");");
-      outputStream.println();
-
-      Iterator<Implicant> iter = implicantList.iterator();
-      int notCounter = 0;
-      int andCounter = 0;
-
-      while (iter.hasNext()) {
-        char[] imp = booleanExpressionToString(iter.next()).toCharArray();
-        int len = imp.length;
-
-        for (int i = 0; i < len; ++i) {
-          if (imp[i] == '\'') {
-            outputStream.println("not n" + notCounter++ + "(iv_" +
-                                  imp[i-1] + ", " + imp[i-1] + ");");
-          }
-        }
-
-        StringBuffer andList = new StringBuffer();
-        for (int i = 0; i < len; ++i) {
-          if (imp[i] == '\'')
-            continue;
-          
-          if (i < len - 1 && imp[i+1] == '\'') {
-            andList.append("iv_" + imp[i]);
-            if (i == len - 2) {
-              andList.append(");");
-              continue;
-            }
-          } else {
-            andList.append(imp[i]);
-          }
-
-          if (i == len - 1) {
-            andList.append(");");
-          } else {
-            andList.append(", ");
-          }
-        }
-
-        outputStream.println("and a" + andCounter + "(a" +
-                            andCounter++ + "_o, 1, " +
-                            andList.toString());
-      }
-
-      StringBuffer orList = new StringBuffer();
-      for (int i = 0; i < andCounter; ++i) {
-        orList.append("a" + i + "_o");
-        if (i == andCounter - 1) {
-          orList.append("); ");
-        } else {
-          orList.append(", ");
-        }
-      }
-
-      outputStream.println("or o(out, 0, " + orList);
-      outputStream.println();
+      
+      //Your code goes here
+      
       outputStream.println("endmodule");
       outputStream.close();
       return true;
-    } catch (Exception e){
-      return false;
-    }
-  }
+<<<<<<< HEAD
+	}
+	
+	/*
+	 * Parameters: fileName
+	 * 
+	 * Generates a verilog file with the same name as the fileName. Do not change
+	 * the input and output port names, as we will need these for testing. The 
+	 * interior of the module, however, can be implemented as you see fit. 
+	 */
+	public boolean genVerilog(String fileName)
+	{
+		try {
+			PrintWriter outputStream = new PrintWriter(new FileWriter(fileName + ".v"));
+			outputStream.println("module " + fileName + "(");
+			for (int i = 0; i < myNumVars; i++)
+			{
+				outputStream.println("input " + alphabet.charAt(i) + ",");
+			}
+			outputStream.println("output out");
+			outputStream.println(");");
+		
+       for (Implicant imp : implicantList) {
+          outputStream.println(booleanExpressionToString(imp));
+       }
+         
+			outputStream.println("endmodule");
+			outputStream.close();
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+		
+	}
 
   public String booleanExpressionToString(Implicant imp) {
     char[] msb = Long.toBinaryString(imp.getMSB()).toCharArray();
     char[] lsb = Long.toBinaryString(imp.getLSB()).toCharArray();
-    int numVars = imp.getNumVars();
     int sizeOfLong = msb.length;
     StringBuffer out = new StringBuffer();
 
-    if (numVars == 0)
-      return "";
-
-    for (int i = numVars; i > 0; --i) {
-      if (msb[sizeOfLong - i] == '1' && lsb[sizeOfLong - i] == '1') {
+    for (int i = sizeOfLong - 1; i > -1; --i) {
+      if (msb[i] == '1' && lsb[i] == '1') {
         continue;
-      } else if (msb[sizeOfLong - i] == '1') {
-        out.append(alphabet.charAt(numVars - i) + "'");
-      } else if (lsb[sizeOfLong - i] == '1') {
-        out.append(alphabet.charAt(numVars - i));
+      } else if (msb[i] == '1') {
+        out.append(alphabet.charAt(sizeOfLong - i - 1) + "'");
+      } else if (lsb[i] == '1') {
+        out.append(alphabet.charAt(sizeOfLong - i - 1));
       }
     }
 
     return out.toString();
   }
+=======
+    } catch (Exception e){
+      return false;
+    }
+    
+  }
+  
+>>>>>>> 134ec7ac817daa103f9c292426d445ce9cc6e361
 }
