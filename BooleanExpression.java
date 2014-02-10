@@ -153,37 +153,37 @@ public class BooleanExpression {
     return true;
   }
 
-	/*
-	 * Parameters: fileName
-	 * 
-	 * Generates a verilog file with the same name as the fileName. Do not change
-	 * the input and output port names, as we will need these for testing. The 
-	 * interior of the module, however, can be implemented as you see fit. 
-	 */
-	public boolean genVerilog(String fileName)
-	{
-		try {
-			PrintWriter outputStream = new PrintWriter(new FileWriter(fileName + ".v"));
-			outputStream.println("module " + fileName + "(");
-			for (int i = 0; i < myNumVars; i++)
-			{
-				outputStream.println("input " + alphabet.charAt(i) + ",");
-			}
-			outputStream.println("output out");
-			outputStream.println(");");
-		
+  /*
+   * Parameters: fileName
+   * 
+   * Generates a verilog file with the same name as the fileName. Do not change
+   * the input and output port names, as we will need these for testing. The 
+   * interior of the module, however, can be implemented as you see fit. 
+   */
+  public boolean genVerilog(String fileName)
+  {
+    try {
+      PrintWriter outputStream = new PrintWriter(new FileWriter(fileName + ".v"));
+      outputStream.println("module " + fileName + "(");
+      for (int i = 0; i < myNumVars; i++)
+      {
+        outputStream.println("input " + alphabet.charAt(i) + ",");
+      }
+      outputStream.println("output out");
+      outputStream.println(");");
+
        for (Implicant imp : implicantList) {
           outputStream.println(booleanExpressionToString(imp));
        }
-         
-			outputStream.println("endmodule");
-			outputStream.close();
-			return true;
-		} catch (Exception e){
-			return false;
-		}
-		
-	}
+
+      outputStream.println("endmodule");
+      outputStream.close();
+      return true;
+    } catch (Exception e){
+      return false;
+    }
+
+  }
 
   public String booleanExpressionToString(Implicant imp) {
     char[] msb = Long.toBinaryString(imp.getMSB()).toCharArray();
