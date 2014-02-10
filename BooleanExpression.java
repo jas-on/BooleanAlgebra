@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-
+import java.lang.StringBuffer;
 
 /**
  * @author Raymond
@@ -145,7 +145,7 @@ public class BooleanExpression {
                continue;
             Iterator<Implicant> iter3 = implicantList.iterator();
             while (iter3.hasNext()) {
-               Implicant imp3 = iter.next();
+               Implicant imp3 = iter3.next();
                if (imp3.equals(imp2) || imp3.equals(imp))
                   continue;
                if(imp.isConsensus(imp2, imp3)) {
@@ -177,9 +177,11 @@ public class BooleanExpression {
 			}
 			outputStream.println("output out");
 			outputStream.println(");");
-			
-			//Your code goes here
-			
+		
+       for (Implicant imp : implicantList) {
+          outputStream.println(booleanExpressionToString(imp));
+       }
+         
 			outputStream.println("endmodule");
 			outputStream.close();
 			return true;
@@ -188,5 +190,23 @@ public class BooleanExpression {
 		}
 		
 	}
-	
+
+  public String booleanExpressionToString(Implicant imp) {
+    char[] msb = Long.toBinaryString(imp.getMSB()).toCharArray();
+    char[] lsb = Long.toBinaryString(imp.getLSB()).toCharArray();
+    int sizeOfLong = msb.length;
+    StringBuffer out = new StringBuffer();
+
+    for (int i = sizeOfLong - 1; i > -1; --i) {
+      if (msb[i] == '1' && lsb[i] == '1') {
+        continue;
+      } else if (msb[i] == '1') {
+        out.append(alphabet.charAt(sizeOfLong - i - 1) + "'");
+      } else if (lsb[i] == '1') {
+        out.append(alphabet.charAt(sizeOfLong - i - 1));
+      }
+    }
+
+    return out.toString();
+  }
 }
